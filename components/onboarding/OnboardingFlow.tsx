@@ -1,7 +1,7 @@
 'use client';
 
 import { ConnectedAccount, Platform } from '@/types';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Button from '../ui/Button';
@@ -55,6 +55,7 @@ const PLATFORMS: {
 export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [connected, setConnected] = useState<ConnectedAccount[]>([]);
   const [activePlatform, setActive] = useState<Platform | null>(null);
+  const [loadingDemo, setLoadingDemo] = useState(false);
 
   // Pick up accounts that were connected via OAuth redirect (callback sets ?connected=platform)
   useEffect(() => {
@@ -165,6 +166,38 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             Go to dashboard
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
+
+          <div className="flex items-center gap-3 w-full">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted-foreground">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={async () => {
+              setLoadingDemo(true);
+              try {
+                await fetch('/api/seed-demo', { method: 'POST' });
+                window.location.href = '/dashboard';
+              } catch {
+                setLoadingDemo(false);
+              }
+            }}
+            disabled={loadingDemo}
+            className="w-full"
+          >
+            {loadingDemo ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Loading demo…
+              </span>
+            ) : (
+              'Try with demo data'
+            )}
+          </Button>
+
           <p className="text-xs text-muted-foreground">
             You can add or remove accounts any time from Settings.
           </p>

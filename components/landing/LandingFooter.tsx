@@ -14,8 +14,8 @@ const links: Record<string, { label: string; href: string }[]> = {
   Company: [
     { label: 'About', href: '#' },
     { label: 'Blog', href: '#' },
-    { label: 'Privacy', href: '#' },
-    { label: 'Terms', href: '#' },
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Terms', href: '/terms' },
   ],
 };
 
@@ -127,7 +127,7 @@ export default function LandingFooter() {
             {['Privacy', 'Terms', 'Cookies'].map((label) => (
               <Link
                 key={label}
-                href="#"
+                href={label === 'Privacy' ? '/privacy' : label === 'Terms' ? '/terms' : '#'}
                 style={{
                   fontSize: '0.8125rem',
                   color: 'rgba(241,241,241,0.22)',
